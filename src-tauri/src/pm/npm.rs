@@ -3,6 +3,19 @@ use super::{PackageManager, Operation, run_streamed};
 
 pub struct NpmManager;
 
+impl NpmManager {
+    /// On Windows, .cmd files must be run through cmd.exe.
+    fn npm_cmd() -> std::process::Command {
+        if cfg!(target_os = "windows") {
+            let mut c = std::process::Command::new("cmd");
+            c.args(["/c", "npm"]);
+            c
+        } else {
+            std::process::Command::new("npm")
+        }
+    }
+}
+
 impl PackageManager for NpmManager {
     fn name(&self) -> &'static str { "npm" }
 
@@ -11,12 +24,13 @@ impl PackageManager for NpmManager {
     }
 
     fn latest_version(&self, package: &str) -> anyhow::Result<String> {
-        let output = std::process::Command::new("npm")
+        let output = Self::npm_cmd()
             .args(["view", package, "version", "--json"])
             .output()
             .context("failed to run npm view")?;
         if !output.status.success() {
-            return Err(anyhow::anyhow!("npm view failed for {}", package));
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            return Err(anyhow::anyhow!("npm view failed for {}: {}", package, stderr.trim()));
         }
         let raw = String::from_utf8_lossy(&output.stdout);
         let version = raw.trim().trim_matches('"').to_string();
@@ -24,7 +38,7 @@ impl PackageManager for NpmManager {
     }
 
     fn run_operation(&self, op: Operation, package: &str, on_line: &dyn Fn(String)) -> anyhow::Result<()> {
-        let mut cmd = std::process::Command::new("npm");
+        let mut cmd = Self::npm_cmd();
         match op {
             Operation::Install   => cmd.args(["install", "-g", package]),
             Operation::Upgrade   => cmd.args(["install", "-g", &format!("{}@latest", package)]),

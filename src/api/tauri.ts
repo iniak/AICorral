@@ -5,36 +5,44 @@ import type {
   DoctorCheck, Settings, ProgressEvent
 } from '../types';
 
+// Tauri rejects invoke() with a plain string. Wrap it in a real Error so
+// err.message works in onError handlers throughout the app.
+function tauriInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
+  return invoke<T>(cmd, args).catch(e => {
+    throw e instanceof Error ? e : new Error(String(e));
+  });
+}
+
 export const api = {
   listCatalog: () =>
-    invoke<CatalogEntry[]>('list_catalog'),
+    tauriInvoke<CatalogEntry[]>('list_catalog'),
 
   detectInstalled: () =>
-    invoke<InstalledState[]>('detect_installed'),
+    tauriInvoke<InstalledState[]>('detect_installed'),
 
   checkLatest: (ids: string[]) =>
-    invoke<LatestVersions>('check_latest', { ids }),
+    tauriInvoke<LatestVersions>('check_latest', { ids }),
 
   install: (id: string) =>
-    invoke<void>('install_cli', { id }),
+    tauriInvoke<void>('install_cli', { id }),
 
   upgrade: (id: string) =>
-    invoke<void>('upgrade_cli', { id }),
+    tauriInvoke<void>('upgrade_cli', { id }),
 
   uninstall: (id: string) =>
-    invoke<void>('uninstall_cli', { id }),
+    tauriInvoke<void>('uninstall_cli', { id }),
 
   launch: (id: string) =>
-    invoke<void>('launch_cli', { id }),
+    tauriInvoke<void>('launch_cli', { id }),
 
   doctor: () =>
-    invoke<DoctorCheck[]>('run_doctor'),
+    tauriInvoke<DoctorCheck[]>('run_doctor'),
 
   getSettings: () =>
-    invoke<Settings>('get_settings'),
+    tauriInvoke<Settings>('get_settings'),
 
   setSettings: (settings: Settings) =>
-    invoke<void>('set_settings', { settings }),
+    tauriInvoke<void>('set_settings', { settings }),
 
   onProgress: (cb: (event: ProgressEvent) => void): Promise<UnlistenFn> =>
     listen<ProgressEvent>('op-progress', (e) => cb(e.payload)),
