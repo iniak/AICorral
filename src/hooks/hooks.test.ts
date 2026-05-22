@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
 import React from 'react';
 
 vi.mock('../api/tauri', () => ({
@@ -14,11 +15,9 @@ vi.mock('../api/tauri', () => ({
 }));
 
 import { useCatalog }   from './useCatalog';
-import { useInstalled } from './useInstalled';
 import { useLatest }    from './useLatest';
-import { useDoctor }    from './useDoctor';
 
-function wrapper({ children }: { children: React.ReactNode }) {
+function wrapper({ children }: { children: ReactNode }) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return React.createElement(QueryClientProvider, { client: qc }, children);
 }

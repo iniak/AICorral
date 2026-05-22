@@ -1,51 +1,59 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { useState, useCallback, useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import Sidebar from './components/Sidebar';
+import MainHeader from './components/MainHeader';
+import { ToastZone } from './components/Toast';
+import Dashboard from './screens/Dashboard';
+import Installed from './screens/Installed';
+import Discover from './screens/Discover';
+import Doctor from './screens/Doctor';
+import Settings from './screens/Settings';
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+export type Route = 'dashboard' | 'installed' | 'discover' | 'doctor' | 'settings';
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+const queryClient = new QueryClient();
 
+export default function App() {
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    <QueryClientProvider client={queryClient}>
+      <AppInner />
+    </QueryClientProvider>
   );
 }
 
-export default App;
+function AppInner() {
+  const [route, setRoute]   = useState<Route>('dashboard');
+  const [selected, setSelected] = useState<string | null>(null);
+  const [toasts, setToasts] = useState<Array<{ id: string; text: string }>>([]);
+
+  const pushToast = useCallback((text: string) => {
+    const id = Math.random().toString(36).slice(2);
+    setToasts(prev => [...prev, { id, text }]);
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3200);
+  }, []);
+
+  const navigate = (r: Route) => { setRoute(r); setSelected(null); };
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelected(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  return (
+    <div className={`app${selected ? ' with-drawer' : ''}`}>
+      <Sidebar route={route} setRoute={navigate} />
+      <main className="main">
+        <MainHeader route={route} />
+        <div className="main-body">
+          {route === 'dashboard' && <Dashboard selected={selected} setSelected={setSelected} setRoute={setRoute} pushToast={pushToast} />}
+          {route === 'installed' && <Installed selected={selected} setSelected={setSelected} pushToast={pushToast} />}
+          {route === 'discover'  && <Discover  selected={selected} setSelected={setSelected} pushToast={pushToast} />}
+          {route === 'doctor'    && <Doctor />}
+          {route === 'settings'  && <Settings />}
+        </div>
+      </main>
+      <ToastZone toasts={toasts} />
+    </div>
+  );
+}
