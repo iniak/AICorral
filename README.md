@@ -4,13 +4,11 @@ A cross-platform desktop app for managing AI coding CLIs — install, upgrade, u
 
 Built with [Tauri 2](https://tauri.app) + Rust + React + TypeScript.
 
+> [中文版 README](./README_cn.md)
+
 ---
 
-## Screenshots
-
-> Dashboard, Installed, Discover, Doctor and Settings screens — Geist design system, native window decorations.
-
-*(Coming soon — run the app locally to see it in action)*
+![AICorral Overview](./AICorral_en.png)
 
 ---
 
