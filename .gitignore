@@ -1,17 +1,24 @@
-# Dependencies
-node_modules/
-# Build output
-dist/
-dist-ssr/
-# Rust / Tauri
-src-tauri/target/
 # Logs
+logs
 *.log
 npm-debug.log*
-# Editor / OS
-.DS_Store
-.idea/
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-# Reference prototype extraction (kept as zip, not tracked unzipped)
-_ref_extracted/
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
