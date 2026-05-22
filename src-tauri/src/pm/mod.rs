@@ -31,6 +31,12 @@ pub fn run_streamed(
 ) -> anyhow::Result<()> {
     use std::io::{BufRead, BufReader};
 
+    #[cfg(target_os = "windows")]
+    {
+        use std::os::windows::process::CommandExt;
+        cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
+
     let mut child = cmd
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Monogram from './Monogram';
+import CliIcon from './CliIcon';
 import InstallProgress from './InstallProgress';
 import type { CliView } from '../types';
 
@@ -23,7 +23,7 @@ export default function DetailDrawer({ cli, busy, lines, progressDone, progressS
     <aside className="drawer">
       <div className="toolbar" style={{ justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Monogram mono={cli.mono} hue={cli.hue} size="sm" />
+          <CliIcon id={cli.id} mono={cli.mono} hue={cli.hue} size="sm" />
           <div>
             <div style={{ fontWeight: 600, fontSize: 14 }}>{cli.name}</div>
             <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{cli.vendor}</div>
@@ -54,7 +54,7 @@ export default function DetailDrawer({ cli, busy, lines, progressDone, progressS
               {cli.binaryPath && <div><span style={{ color: 'var(--ink-3)' }}>Path: </span><code style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}>{cli.binaryPath}</code></div>}
               {cli.installedAt && <div><span style={{ color: 'var(--ink-3)' }}>Installed: </span>{cli.installedAt}</div>}
             </div>
-            <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'flex-start' }}>
               {cli.installed ? (
                 <>
                   <button className="btn sm primary" onClick={() => onAction('launch', cli)}>Launch</button>

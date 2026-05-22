@@ -24,8 +24,14 @@ pub fn run_doctor() -> Vec<DoctorCheck> {
 fn check_runtime(bin: &str, version_flag: &str, label: &str) -> DoctorCheck {
     match which::which(bin) {
         Ok(path) => {
-            let version = std::process::Command::new(&path)
-                .arg(version_flag)
+            let mut cmd = std::process::Command::new(&path);
+            cmd.arg(version_flag);
+            #[cfg(target_os = "windows")]
+            {
+                use std::os::windows::process::CommandExt;
+                cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+            }
+            let version = cmd
                 .output()
                 .ok()
                 .map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string())

@@ -24,10 +24,14 @@ impl PackageManager for NpmManager {
     }
 
     fn latest_version(&self, package: &str) -> anyhow::Result<String> {
-        let output = Self::npm_cmd()
-            .args(["view", package, "version", "--json"])
-            .output()
-            .context("failed to run npm view")?;
+        let mut cmd = Self::npm_cmd();
+        cmd.args(["view", package, "version", "--json"]);
+        #[cfg(target_os = "windows")]
+        {
+            use std::os::windows::process::CommandExt;
+            cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+        }
+        let output = cmd.output().context("failed to run npm view")?;
         if !output.status.success() {
             let stderr = String::from_utf8_lossy(&output.stderr);
             return Err(anyhow::anyhow!("npm view failed for {}: {}", package, stderr.trim()));

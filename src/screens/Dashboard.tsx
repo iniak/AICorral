@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useCatalog } from '../hooks/useCatalog';
 import { useInstalled } from '../hooks/useInstalled';
 import { useLatest } from '../hooks/useLatest';
-import Monogram from '../components/Monogram';
+import CliIcon from '../components/CliIcon';
 import type { Route } from '../App';
 
 interface Props {
@@ -54,7 +54,7 @@ export default function Dashboard({ setSelected, setRoute }: Props) {
             {updates.slice(0, 3).map(e => (
               <div key={e.id} className="list-row" style={{ gridTemplateColumns: '32px 1fr auto', cursor: 'pointer' }}
                 onClick={() => { setRoute('installed'); setSelected(e.id); }}>
-                <Monogram mono={e.mono} hue={e.hue} size="sm" />
+                <CliIcon id={e.id} mono={e.mono} hue={e.hue} size="sm" />
                 <div>
                   <div className="name">{e.name}</div>
                   <div className="desc" style={{ fontSize: 11, color: 'var(--ink-3)' }}>{instMap[e.id]?.currentVersion} → {latest[e.id]}</div>
@@ -73,7 +73,7 @@ export default function Dashboard({ setSelected, setRoute }: Props) {
             {installedEntries.slice(0, 3).map(e => (
               <div key={e.id} className="list-row" style={{ gridTemplateColumns: '32px 1fr auto', cursor: 'pointer' }}
                 onClick={() => { setRoute('installed'); setSelected(e.id); }}>
-                <Monogram mono={e.mono} hue={e.hue} size="sm" />
+                <CliIcon id={e.id} mono={e.mono} hue={e.hue} size="sm" />
                 <div>
                   <div className="name">{e.name}</div>
                   <div className="desc" style={{ fontSize: 11, color: 'var(--ink-3)' }}>{instMap[e.id]?.currentVersion ?? 'unknown version'}</div>

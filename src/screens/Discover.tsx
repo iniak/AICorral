@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useCatalog } from '../hooks/useCatalog';
 import { useInstalled } from '../hooks/useInstalled';
 import { useInstallMutation } from '../hooks/useInstallMutation';
-import Monogram from '../components/Monogram';
+import CliIcon from '../components/CliIcon';
 import { api } from '../api/tauri';
 import type { CliView, ProgressEvent } from '../types';
 
@@ -65,7 +65,7 @@ export default function Discover({ setSelected, pushToast }: Props) {
         {shown.map(cli => (
           <div key={cli.id} className="discover-card" onClick={() => setSelected(cli.id)}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-              <Monogram mono={cli.mono} hue={cli.hue} size="md" />
+              <CliIcon id={cli.id} mono={cli.mono} hue={cli.hue} size="md" />
               <div>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{cli.name}</div>
                 <div style={{ fontSize: 11, color: 'var(--ink-3)' }}>{cli.vendor}</div>

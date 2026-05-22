@@ -27,8 +27,14 @@ pub fn detect_cli(entry: &CatalogEntry) -> InstalledState {
         },
     };
 
-    let version = std::process::Command::new(&path)
-        .arg("--version")
+    let mut version_cmd = std::process::Command::new(&path);
+    version_cmd.arg("--version");
+    #[cfg(target_os = "windows")]
+    {
+        use std::os::windows::process::CommandExt;
+        version_cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
+    let version = version_cmd
         .output()
         .ok()
         .and_then(|o| {

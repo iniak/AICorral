@@ -1,4 +1,4 @@
-import Monogram from './Monogram';
+import CliIcon from './CliIcon';
 import type { CliView } from '../types';
 
 interface Props {
@@ -17,7 +17,7 @@ export default function ListRow({ cli, selected, checked, onCheck, onSelect, onA
   return (
     <div className={`list-row${selected ? ' selected' : ''}`} onClick={() => onSelect(cli.id)}>
       <input type="checkbox" checked={checked} onClick={e => e.stopPropagation()} onChange={() => onCheck(cli.id)} />
-      <Monogram mono={cli.mono} hue={cli.hue} size="sm" />
+      <CliIcon id={cli.id} mono={cli.mono} hue={cli.hue} size="sm" />
       <div className="name">{cli.name}</div>
       <div className="desc" style={{ color: 'var(--ink-3)', fontSize: 12 }}>{cli.vendor}</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
