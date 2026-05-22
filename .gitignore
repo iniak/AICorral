@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+# Build output
+dist/
+dist-ssr/
+# Rust / Tauri
+src-tauri/target/
+# Logs
+*.log
+npm-debug.log*
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+# Reference prototype extraction (kept as zip, not tracked unzipped)
+_ref_extracted/
