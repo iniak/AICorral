@@ -1,0 +1,114 @@
+[
+  {
+    "id": "claude-code",
+    "name": "Claude Code",
+    "vendor": "Anthropic",
+    "mono": "CC",
+    "hue": 28,
+    "description": "Agentic coding in your terminal. Edits files, runs commands, writes tests.",
+    "tags": ["agent", "terminal", "editor"],
+    "launchCmd": "claude",
+    "runtime": "Node ≥ 18",
+    "sources": [
+      { "manager": "npm", "package": "@anthropic-ai/claude-code", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "codex",
+    "name": "Codex CLI",
+    "vendor": "OpenAI",
+    "mono": "CX",
+    "hue": 150,
+    "description": "Lightweight coding agent that runs in your terminal. Supports local + cloud models.",
+    "tags": ["agent", "terminal"],
+    "launchCmd": "codex",
+    "runtime": "Node ≥ 20",
+    "sources": [
+      { "manager": "npm", "package": "@openai/codex", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "gemini-cli",
+    "name": "Gemini CLI",
+    "vendor": "Google",
+    "mono": "GM",
+    "hue": 240,
+    "description": "Command-line interface for Gemini models. Code, search, multi-modal input.",
+    "tags": ["agent", "multi-modal"],
+    "launchCmd": "gemini",
+    "runtime": "Node ≥ 18",
+    "sources": [
+      { "manager": "npm", "package": "@google/gemini-cli", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "kimi-cli",
+    "name": "Kimi CLI",
+    "vendor": "Moonshot AI",
+    "mono": "KM",
+    "hue": 330,
+    "description": "Long-context coding assistant. 200k-token context, native CN/EN support.",
+    "tags": ["agent", "long-context"],
+    "launchCmd": "kimi",
+    "runtime": "Node ≥ 18",
+    "sources": [
+      { "manager": "npm", "package": "@moonshot/kimi-cli", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "aider",
+    "name": "Aider",
+    "vendor": "Paul Gauthier",
+    "mono": "AI",
+    "hue": 290,
+    "description": "AI pair programming in your terminal. Git-aware, model-agnostic.",
+    "tags": ["pair", "git", "python"],
+    "launchCmd": "aider",
+    "runtime": "Python ≥ 3.10",
+    "sources": [
+      { "manager": "pip", "package": "aider-chat", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "cline",
+    "name": "Cline",
+    "vendor": "Cline",
+    "mono": "CL",
+    "hue": 195,
+    "description": "Autonomous coding agent with plan/act modes. Reads, writes, runs.",
+    "tags": ["agent", "plan/act"],
+    "launchCmd": "cline",
+    "runtime": "Node ≥ 18",
+    "sources": [
+      { "manager": "npm", "package": "@cline/cli", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "goose",
+    "name": "Goose",
+    "vendor": "Block",
+    "mono": "GO",
+    "hue": 70,
+    "description": "Open-source on-machine AI agent. Extensible via toolkits and MCPs.",
+    "tags": ["agent", "open-source", "mcp"],
+    "launchCmd": "goose",
+    "runtime": "Rust binary",
+    "sources": [
+      { "manager": "brew", "package": "block/goose/goose", "os": ["macos", "linux"] }
+    ]
+  },
+  {
+    "id": "antigravity",
+    "name": "Antigravity CLI",
+    "vendor": "Antigravity Labs",
+    "mono": "AG",
+    "hue": 12,
+    "description": "Spec-driven coding. Generate scaffolds, run reviews, ship PRs.",
+    "tags": ["spec", "workflow"],
+    "launchCmd": "ag",
+    "runtime": "Node ≥ 20",
+    "sources": [
+      { "manager": "npm", "package": "antigravity", "os": ["windows", "macos", "linux"] }
+    ]
+  }
+]
