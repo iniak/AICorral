@@ -1,5 +1,6 @@
 pub mod catalog;
 pub mod pm;
+pub mod detect;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
