@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useCatalog } from '../hooks/useCatalog';
 import { useInstalled } from '../hooks/useInstalled';
 import { useInstallMutation } from '../hooks/useInstallMutation';
@@ -11,12 +11,10 @@ import type { CliView, ProgressEvent } from '../types';
 const TAGS = ['All', 'agent', 'pair', 'mcp', 'open-source'] as const;
 
 interface Props {
-  selected: string | null;
-  setSelected: (id: string | null) => void;
   pushToast: (msg: string) => void;
 }
 
-export default function Discover({ setSelected, pushToast }: Props) {
+export default function Discover({ pushToast }: Props) {
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
 
@@ -27,7 +25,6 @@ export default function Discover({ setSelected, pushToast }: Props) {
   const { data: currentOs } = usePlatform();
 
   const instMap = useMemo(() => Object.fromEntries((installed ?? []).map(s => [s.id, s])), [installed]);
-  useEffect(() => setSelected(null), [setSelected]);
 
   const mutation = useInstallMutation((_event: ProgressEvent) => {});
 

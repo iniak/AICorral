@@ -1,8 +1,7 @@
 import type { Route } from '../App';
 
 const TITLES: Record<Route, { h1: string; sub: string }> = {
-  dashboard: { h1: 'Dashboard',  sub: 'Overview of your AI coding CLIs' },
-  installed: { h1: 'Installed',  sub: 'Manage installed CLIs' },
+  dashboard: { h1: 'Dashboard',  sub: 'Manage your installed AI coding CLIs' },
   discover:  { h1: 'Discover',   sub: 'Browse and install new CLIs' },
   doctor:    { h1: 'Doctor',     sub: 'System environment checks' },
   settings:  { h1: 'Settings',   sub: 'Configuration and preferences' },

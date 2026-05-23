@@ -44,10 +44,10 @@ const ICONS: Record<string, IconDef> = {
   'aider': {
     bg: '#020403',
     icon: (sz) => (
-      <svg width={sz} height={sz} viewBox="0 0 100 100" fill="none">
+      <svg width={sz} height={sz} viewBox="0 0 48 48" fill="none" shapeRendering="crispEdges">
         <defs>
-          <filter id="aiderGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="2.2" result="blur" />
+          <filter id="aiderPixelGlow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="1.4" result="blur" />
             <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.08 0 0 0 0 0.69 0 0 0 0 0.08 0 0 0 0.75 0" />
             <feMerge>
               <feMergeNode />
@@ -55,21 +55,13 @@ const ICONS: Record<string, IconDef> = {
             </feMerge>
           </filter>
         </defs>
-        <text
-          x="50"
-          y="55"
-          fill="#14B014"
-          filter="url(#aiderGlow)"
-          fontFamily="'Geist Mono', ui-monospace, SFMono-Regular, Consolas, monospace"
-          fontSize="24"
-          fontWeight="700"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          textLength="82"
-          lengthAdjust="spacingAndGlyphs"
-        >
-          aider
-        </text>
+        <g filter="url(#aiderPixelGlow)">
+          <rect x="13" y="4" width="20" height="6" fill="#00F879" />
+          <rect x="28" y="10" width="6" height="28" fill="#00D86B" />
+          <rect x="6" y="17" width="22" height="6" fill="#00F879" />
+          <rect x="13" y="30" width="21" height="6" fill="#00F879" />
+          <rect x="34" y="36" width="5" height="7" fill="#00D86B" />
+        </g>
       </svg>
     ),
   },

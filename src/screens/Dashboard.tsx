@@ -1,33 +1,93 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useCatalog } from '../hooks/useCatalog';
 import { useInstalled } from '../hooks/useInstalled';
 import { useLatest } from '../hooks/useLatest';
-import CliIcon from '../components/CliIcon';
+import { useInstallMutation } from '../hooks/useInstallMutation';
+import { usePlatform } from '../hooks/usePlatform';
+import ListRow from '../components/ListRow';
+import { api } from '../api/tauri';
 import type { Route } from '../App';
+import type { CliView, ProgressEvent } from '../types';
 
 interface Props {
-  selected: string | null;
-  setSelected: (id: string | null) => void;
   setRoute: (r: Route) => void;
   pushToast: (msg: string) => void;
 }
 
-export default function Dashboard({ setSelected, setRoute }: Props) {
+function buildCliViews(
+  catalog: ReturnType<typeof useCatalog>['data'],
+  installed: ReturnType<typeof useInstalled>['data'],
+  latest: Record<string, string>,
+  currentOs: string,
+): CliView[] {
+  if (!catalog) return [];
+  const instMap = Object.fromEntries((installed ?? []).map(s => [s.id, s]));
+  return catalog.map(entry => {
+    const state = instMap[entry.id];
+    return {
+      ...entry,
+      installed: state?.installed ?? false,
+      currentVersion: state?.currentVersion ?? null,
+      latestVersion: latest[entry.id] ?? null,
+      binaryPath: state?.binaryPath ?? null,
+      installedAt: state?.installedAt ?? null,
+      availableOnOs: currentOs ? entry.sources.some(s => s.os.includes(currentOs)) : false,
+    };
+  });
+}
+
+export default function Dashboard({ setRoute, pushToast }: Props) {
+  const [search, setSearch] = useState('');
+  const [checked, setChecked] = useState<Set<string>>(new Set());
+
   const { data: catalog } = useCatalog();
   const { data: installed } = useInstalled();
-  const ids = catalog?.map(e => e.id) ?? [];
+  const { data: currentOs } = usePlatform();
+  const ids = useMemo(() => (catalog ?? []).map(e => e.id), [catalog]);
   const { data: latest = {} } = useLatest(ids);
 
-  const instMap = useMemo(() => Object.fromEntries((installed ?? []).map(s => [s.id, s])), [installed]);
-  const installedEntries = useMemo(() => (catalog ?? []).filter(e => instMap[e.id]?.installed), [catalog, instMap]);
-  const updates = useMemo(() => installedEntries.filter(e => latest[e.id] && instMap[e.id]?.currentVersion !== latest[e.id]), [installedEntries, latest, instMap]);
+  const views = useMemo(
+    () => buildCliViews(catalog, installed, latest, currentOs ?? ''),
+    [catalog, installed, latest, currentOs],
+  );
+  const installedViews = useMemo(() => views.filter(v => v.installed), [views]);
+  const updates = useMemo(
+    () => installedViews.filter(v => v.latestVersion && v.currentVersion !== v.latestVersion),
+    [installedViews],
+  );
+
+  const shown = installedViews.filter(cli => {
+    const term = search.trim().toLowerCase();
+    return !term ||
+      cli.name.toLowerCase().includes(term) ||
+      cli.vendor.toLowerCase().includes(term) ||
+      cli.tags.some(t => t.includes(term));
+  });
+
+  const mutation = useInstallMutation((_event: ProgressEvent) => {});
+
+  const onAction = (op: 'install' | 'upgrade' | 'uninstall' | 'launch', cli: CliView) => {
+    if (op === 'launch') { api.launch(cli.id); return; }
+    mutation.mutate({ op, id: cli.id }, {
+      onSuccess: () => pushToast(`${op === 'install' ? 'Installed' : op === 'upgrade' ? 'Upgraded' : 'Removed'} ${cli.name}`),
+      onError: (err) => pushToast(`Error: ${err.message}`),
+    });
+  };
+
+  const toggleChecked = (id: string) => {
+    setChecked(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
 
   return (
-    <div style={{ overflowY: 'auto' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
       <div className="stat-grid">
         <div className="stat">
           <div className="label">Installed</div>
-          <div className="value">{installedEntries.length}</div>
+          <div className="value">{installedViews.length}</div>
           <div className="change">of {catalog?.length ?? 0} available</div>
         </div>
         <div className="stat">
@@ -44,52 +104,46 @@ export default function Dashboard({ setSelected, setRoute }: Props) {
         </div>
       </div>
 
-      {updates.length > 0 && (
-        <div style={{ marginBottom: 20 }}>
-          <div className="section-head">
-            <h2>Updates available</h2>
-            <button className="btn sm" onClick={() => setRoute('installed')}>View all</button>
+      <section className="dashboard-manager">
+        <div className="section-head">
+          <div>
+            <h2>Installed CLIs</h2>
+            <p>Launch, update, or remove installed tools directly from the dashboard.</p>
           </div>
-          <div className="list">
-            {updates.slice(0, 3).map(e => (
-              <div key={e.id} className="list-row" style={{ gridTemplateColumns: '32px 1fr auto', cursor: 'pointer' }}
-                onClick={() => { setRoute('installed'); setSelected(e.id); }}>
-                <CliIcon id={e.id} mono={e.mono} hue={e.hue} size="sm" />
-                <div>
-                  <div className="name">{e.name}</div>
-                  <div className="desc" style={{ fontSize: 11, color: 'var(--ink-3)' }}>{instMap[e.id]?.currentVersion} → {latest[e.id]}</div>
-                </div>
-                <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 4, background: 'var(--warn-soft)', color: 'var(--warn)' }}>Update</span>
-              </div>
-            ))}
+          <div className="dashboard-manager-actions">
+            <input
+              className="dashboard-search"
+              placeholder="Search installed..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+            <button className="btn sm" onClick={() => setRoute('discover')}>Discover more</button>
           </div>
         </div>
-      )}
 
-      {installedEntries.length > 0 && (
-        <div>
-          <div className="section-head"><h2>Recently detected</h2></div>
-          <div className="list">
-            {installedEntries.slice(0, 3).map(e => (
-              <div key={e.id} className="list-row" style={{ gridTemplateColumns: '32px 1fr auto', cursor: 'pointer' }}
-                onClick={() => { setRoute('installed'); setSelected(e.id); }}>
-                <CliIcon id={e.id} mono={e.mono} hue={e.hue} size="sm" />
-                <div>
-                  <div className="name">{e.name}</div>
-                  <div className="desc" style={{ fontSize: 11, color: 'var(--ink-3)' }}>{instMap[e.id]?.currentVersion ?? 'unknown version'}</div>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="list dashboard-list">
+          {shown.length === 0 && (
+            <div className="empty">
+              <p>{installedViews.length === 0 ? 'No CLIs installed yet.' : 'No installed CLIs match your search.'}</p>
+              {installedViews.length === 0 && (
+                <button className="btn primary" onClick={() => setRoute('discover')}>Discover CLIs</button>
+              )}
+            </div>
+          )}
+          {shown.map(cli => (
+            <ListRow
+              key={cli.id}
+              cli={cli}
+              selected={false}
+              checked={checked.has(cli.id)}
+              onCheck={toggleChecked}
+              onSelect={() => {}}
+              onAction={onAction}
+              busy={mutation.isPending && mutation.variables?.id === cli.id}
+            />
+          ))}
         </div>
-      )}
-
-      {installedEntries.length === 0 && (
-        <div className="empty">
-          <p>No CLIs installed yet.</p>
-          <button className="btn primary" onClick={() => setRoute('discover')}>Discover CLIs</button>
-        </div>
-      )}
+      </section>
     </div>
   );
 }
