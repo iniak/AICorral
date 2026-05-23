@@ -18,10 +18,26 @@ const ICONS: Record<string, IconDef> = {
     ),
   },
   'codex': {
-    bg: '#0f0f0f',
+    bg: '#F8FAFF',
     icon: (sz) => (
-      <svg width={sz} height={sz} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
-        <path d="M12 4v16M6.9 7.5l10.2 9M17.1 7.5L6.9 16.5" />
+      <svg width={sz} height={sz} viewBox="0 0 64 64" fill="none">
+        <defs>
+          <linearGradient id="codexCloud" x1="18" y1="9" x2="46" y2="57" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#D9C8FF" />
+            <stop offset="0.5" stopColor="#5A78FF" />
+            <stop offset="1" stopColor="#252BFF" />
+          </linearGradient>
+          <filter id="codexSoftShadow" x="-15%" y="-15%" width="130%" height="135%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#2945FF" floodOpacity="0.25" />
+          </filter>
+        </defs>
+        <path
+          filter="url(#codexSoftShadow)"
+          d="M17.5 47.2C11.2 45.4 7 39.6 7 32.9c0-7.9 5.9-14.5 13.6-15.4C24.1 10.7 31 6.6 38.5 8c4.8.9 9 3.8 11.5 7.9 8.2.5 14.6 7.3 14.6 15.7 0 7.6-5.4 14.2-12.8 15.5-2.1 6-7.8 10-14.3 10-3.6 0-7.1-1.3-9.8-3.6-4.1 1.5-8.7.4-11.8-2.8-1-1.1-1-2.4 1.6-3.5Z"
+          fill="url(#codexCloud)"
+        />
+        <path d="M25 24l7 8-7 8" stroke="white" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M39 40h10" stroke="white" strokeWidth="4.5" strokeLinecap="round" />
       </svg>
     ),
   },
@@ -44,23 +60,29 @@ const ICONS: Record<string, IconDef> = {
   'aider': {
     bg: '#020403',
     icon: (sz) => (
-      <svg width={sz} height={sz} viewBox="0 0 48 48" fill="none" shapeRendering="crispEdges">
+      <svg width={sz} height={sz} viewBox="0 0 64 64" fill="none" shapeRendering="crispEdges">
         <defs>
-          <filter id="aiderPixelGlow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="1.4" result="blur" />
-            <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.08 0 0 0 0 0.69 0 0 0 0 0.08 0 0 0 0.75 0" />
-            <feMerge>
-              <feMergeNode />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
+          <linearGradient id="aiderBg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#071E18" />
+            <stop offset="1" stopColor="#02100D" />
+          </linearGradient>
+          <linearGradient id="aiderPixel" x1="16" y1="8" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#00FF93" />
+            <stop offset="1" stopColor="#00E573" />
+          </linearGradient>
+          <pattern id="aiderScan" width="64" height="8" patternUnits="userSpaceOnUse">
+            <rect width="64" height="4" fill="rgba(0,255,150,0.06)" />
+          </pattern>
         </defs>
-        <g filter="url(#aiderPixelGlow)">
-          <rect x="13" y="4" width="20" height="6" fill="#00F879" />
-          <rect x="28" y="10" width="6" height="28" fill="#00D86B" />
-          <rect x="6" y="17" width="22" height="6" fill="#00F879" />
-          <rect x="13" y="30" width="21" height="6" fill="#00F879" />
-          <rect x="34" y="36" width="5" height="7" fill="#00D86B" />
+        <rect width="64" height="64" rx="13" fill="url(#aiderBg)" />
+        <rect width="64" height="64" rx="13" fill="url(#aiderScan)" />
+        <g filter="drop-shadow(0 0 2px rgba(0,255,145,0.65))">
+          <rect x="23" y="10" width="17" height="8" fill="url(#aiderPixel)" />
+          <rect x="39" y="18" width="8" height="18" fill="url(#aiderPixel)" />
+          <rect x="22" y="27" width="17" height="8" fill="url(#aiderPixel)" />
+          <rect x="16" y="36" width="6" height="9" fill="url(#aiderPixel)" />
+          <rect x="22" y="44" width="17" height="8" fill="url(#aiderPixel)" />
+          <rect x="47" y="45" width="6" height="7" fill="url(#aiderPixel)" />
         </g>
       </svg>
     ),
