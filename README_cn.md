@@ -135,6 +135,12 @@ AICorral/
 
 ---
 
+## 开发辅助
+
+本项目开发过程中使用了 Claude Code 和 ChatGPT Codex 辅助。
+
+---
+
 ## 开源协议
 
 MIT

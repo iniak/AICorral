@@ -135,6 +135,12 @@ AICorral/
 
 ---
 
+## Development Assistance
+
+This project was developed with assistance from Claude Code and ChatGPT Codex.
+
+---
+
 ## License
 
 MIT
