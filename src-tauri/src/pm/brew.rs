@@ -11,9 +11,12 @@ impl PackageManager for BrewManager {
     }
 
     fn latest_version(&self, package: &str) -> anyhow::Result<String> {
+        let settings = crate::settings::load();
         let formula = package.split('/').last().unwrap_or(package);
         let url = format!("https://formulae.brew.sh/api/formula/{}.json", formula);
-        let resp: serde_json::Value = reqwest::blocking::get(&url)
+        let resp: serde_json::Value = settings.http_client()?
+            .get(&url)
+            .send()
             .context("failed to reach Homebrew API")?
             .json()
             .context("invalid Homebrew response")?;
@@ -25,12 +28,14 @@ impl PackageManager for BrewManager {
     }
 
     fn run_operation(&self, op: Operation, package: &str, on_line: &dyn Fn(String)) -> anyhow::Result<()> {
+        let settings = crate::settings::load();
         let mut cmd = std::process::Command::new("brew");
         match op {
             Operation::Install   => cmd.args(["install", package]),
             Operation::Upgrade   => cmd.args(["upgrade", package]),
             Operation::Uninstall => cmd.args(["uninstall", package]),
         };
+        settings.apply_proxy_env(&mut cmd);
         run_streamed(cmd, on_line)
     }
 }

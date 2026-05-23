@@ -8,7 +8,8 @@ import type {
 // Tauri rejects invoke() with a plain string. Wrap it in a real Error so
 // err.message works in onError handlers throughout the app.
 function tauriInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
-  return invoke<T>(cmd, args).catch(e => {
+  const promise = args === undefined ? invoke<T>(cmd) : invoke<T>(cmd, args);
+  return promise.catch(e => {
     throw e instanceof Error ? e : new Error(String(e));
   });
 }

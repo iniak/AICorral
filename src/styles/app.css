@@ -138,6 +138,14 @@ button { font-family: inherit; }
 
 /* ============ MAIN ============ */
 .main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.main-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 32px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
 .main-head {
   padding: 18px 28px 0;
   border-bottom: 1px solid var(--border);
@@ -329,6 +337,16 @@ button { font-family: inherit; }
 .list-row .status { display: flex; align-items: center; gap: 6px;
   font-size: 12px; color: var(--ink-2); }
 .list-row .actions { display: flex; gap: 6px; justify-content: flex-end; }
+.app.with-drawer .list-row {
+  grid-template-columns: 24px 32px minmax(110px, 1fr) 96px minmax(76px, 108px) minmax(112px, max-content);
+  gap: 10px;
+  padding: 10px 12px;
+}
+.app.with-drawer .list-row .actions {
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 4px;
+}
 
 /* List head row */
 .list-head {
@@ -388,6 +406,7 @@ button { font-family: inherit; }
 }
 .discover-card:hover { border-color: rgba(0,0,0,0.16);
   box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+.discover-action { align-self: flex-start; max-width: 128px; justify-content: center; }
 .discover-card .head { display: flex; align-items: flex-start; gap: 12px; }
 .discover-card .title { font-size: 14px; font-weight: 600; }
 .discover-card .vendor { font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
@@ -430,6 +449,7 @@ button { font-family: inherit; }
   min-height: 0;
   animation: drawerIn .22s cubic-bezier(.3,.7,.4,1);
 }
+.drawer > .toolbar { padding: 14px 20px 10px; }
 @keyframes drawerIn {
   from { transform: translateX(20px); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
@@ -650,7 +670,7 @@ button { font-family: inherit; }
 
 /* Detail tabs */
 .dtabs { display: flex; gap: 14px; border-bottom: 1px solid var(--border-2);
-  margin-bottom: 12px; }
+  margin-bottom: 12px; padding: 0 20px; }
 .dtab { border: 0; background: transparent; cursor: default;
   font: inherit; font-size: 12.5px; font-weight: 500;
   color: var(--ink-3); padding: 8px 0;

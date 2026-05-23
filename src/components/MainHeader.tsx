@@ -13,7 +13,7 @@ interface Props { route: Route; }
 export default function MainHeader({ route }: Props) {
   const { h1, sub } = TITLES[route];
   return (
-    <div className="toolbar">
+    <div className="main-header">
       <div>
         <h1 style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>{h1}</h1>
         <p style={{ margin: 0, fontSize: 12, color: 'var(--ink-3)' }}>{sub}</p>

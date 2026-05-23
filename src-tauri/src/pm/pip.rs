@@ -9,6 +9,18 @@ impl PipManager {
         else if which::which("pip3").is_ok() { "pip3" }
         else { "pip" }
     }
+
+    fn add_index_args(cmd: &mut std::process::Command, exe: &str, index_url: &str) {
+        let index_url = index_url.trim();
+        if index_url.is_empty() {
+            return;
+        }
+        if exe == "pipx" {
+            cmd.args(["--pip-args", &format!("--index-url {}", index_url)]);
+        } else {
+            cmd.args(["--index-url", index_url]);
+        }
+    }
 }
 
 impl PackageManager for PipManager {
@@ -21,8 +33,11 @@ impl PackageManager for PipManager {
     }
 
     fn latest_version(&self, package: &str) -> anyhow::Result<String> {
+        let settings = crate::settings::load();
         let url = format!("https://pypi.org/pypi/{}/json", package);
-        let resp: serde_json::Value = reqwest::blocking::get(&url)
+        let resp: serde_json::Value = settings.http_client()?
+            .get(&url)
+            .send()
             .context("failed to reach PyPI")?
             .json()
             .context("invalid PyPI response")?;
@@ -34,11 +49,22 @@ impl PackageManager for PipManager {
     }
 
     fn run_operation(&self, op: Operation, package: &str, on_line: &dyn Fn(String)) -> anyhow::Result<()> {
+        let settings = crate::settings::load();
         let exe = Self::executable();
         let mut cmd = std::process::Command::new(exe);
         match op {
-            Operation::Install   => { cmd.args(["install", package]); }
-            Operation::Upgrade   => { cmd.args(["install", "--upgrade", package]); }
+            Operation::Install   => {
+                cmd.args(["install", package]);
+                Self::add_index_args(&mut cmd, exe, &settings.pip_index_url);
+            }
+            Operation::Upgrade   => {
+                if exe == "pipx" {
+                    cmd.args(["upgrade", package]);
+                } else {
+                    cmd.args(["install", "--upgrade", "--user", package]);
+                }
+                Self::add_index_args(&mut cmd, exe, &settings.pip_index_url);
+            }
             Operation::Uninstall => {
                 if exe == "pipx" {
                     cmd.args(["uninstall", package]);
@@ -47,6 +73,10 @@ impl PackageManager for PipManager {
                 }
             }
         }
+        if exe != "pipx" && matches!(op, Operation::Install) {
+            cmd.arg("--user");
+        }
+        settings.apply_proxy_env(&mut cmd);
         run_streamed(cmd, on_line)
     }
 }

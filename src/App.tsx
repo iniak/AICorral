@@ -13,6 +13,7 @@ import { useCatalog } from './hooks/useCatalog';
 import { useInstalled } from './hooks/useInstalled';
 import { useLatest } from './hooks/useLatest';
 import { useInstallMutation } from './hooks/useInstallMutation';
+import { usePlatform } from './hooks/usePlatform';
 import { api } from './api/tauri';
 import type { CliView, ProgressEvent } from './types';
 
@@ -36,6 +37,7 @@ function AppInner() {
 
   const { data: catalog } = useCatalog();
   const { data: installed } = useInstalled();
+  const { data: currentOs } = usePlatform();
   const ids = catalog?.map(e => e.id) ?? [];
   const { data: latest = {} } = useLatest(ids);
 
@@ -51,17 +53,26 @@ function AppInner() {
         latestVersion: latest[entry.id] ?? null,
         binaryPath: state?.binaryPath ?? null,
         installedAt: state?.installedAt ?? null,
-        availableOnOs: entry.sources.some(s => s.os.includes('windows')),
+        availableOnOs: currentOs ? entry.sources.some(s => s.os.includes(currentOs)) : false,
       };
     });
-  }, [catalog, installed, latest]);
+  }, [catalog, installed, latest, currentOs]);
 
   const selectedView = selected ? views.find(v => v.id === selected) ?? null : null;
 
   const mutation = useInstallMutation((event: ProgressEvent) => {
     setProgressMap(prev => {
       const existing = prev[event.id] ?? { lines: [], done: false, success: false };
-      if (event.phase === 'done')  return { ...prev, [event.id]: { ...existing, done: true, success: true } };
+      if (event.phase === 'done') {
+        window.setTimeout(() => {
+          setProgressMap(current => {
+            const next = { ...current };
+            delete next[event.id];
+            return next;
+          });
+        }, 1200);
+        return { ...prev, [event.id]: { ...existing, done: true, success: true } };
+      }
       if (event.phase === 'error') return { ...prev, [event.id]: { ...existing, done: true, success: false } };
       return { ...prev, [event.id]: { ...existing, lines: [...existing.lines, event.line] } };
     });

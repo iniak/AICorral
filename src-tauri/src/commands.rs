@@ -86,13 +86,23 @@ fn run_cli_op(
 
     let app_clone = app.clone();
     let id_clone = id.clone();
-    mgr.run_operation(op, &source.package, &move |line| {
+    let result = mgr.run_operation(op, &source.package, &move |line| {
         let _ = app_clone.emit("op-progress", ProgressEvent {
             id: id_clone.clone(),
             line,
             phase: "running".into(),
         });
-    })?;
+    });
+
+    if let Err(err) = result {
+        let message = err.to_string();
+        let _ = app.emit("op-progress", ProgressEvent {
+            id,
+            line: message,
+            phase: "error".into(),
+        });
+        return Err(err);
+    }
 
     app.emit("op-progress", ProgressEvent {
         id,

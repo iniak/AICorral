@@ -3,6 +3,7 @@ import { useCatalog } from '../hooks/useCatalog';
 import { useInstalled } from '../hooks/useInstalled';
 import { useLatest } from '../hooks/useLatest';
 import { useInstallMutation } from '../hooks/useInstallMutation';
+import { usePlatform } from '../hooks/usePlatform';
 import ListRow from '../components/ListRow';
 import { api } from '../api/tauri';
 import type { CliView, ProgressEvent } from '../types';
@@ -44,18 +45,28 @@ export default function Installed({ selected, setSelected, pushToast }: Props) {
 
   const { data: catalog } = useCatalog();
   const { data: installed } = useInstalled();
+  const { data: currentOs } = usePlatform();
   const ids = catalog?.map(e => e.id) ?? [];
   const { data: latest = {} } = useLatest(ids);
 
   const views = useMemo(
-    () => buildCliViews(catalog, installed, latest, 'windows'),
-    [catalog, installed, latest]
+    () => buildCliViews(catalog, installed, latest, currentOs ?? ''),
+    [catalog, installed, latest, currentOs]
   );
 
   const mutation = useInstallMutation((event: ProgressEvent) => {
     setProgressMap(prev => {
       const existing = prev[event.id] ?? { lines: [], done: false, success: false };
-      if (event.phase === 'done')  return { ...prev, [event.id]: { ...existing, done: true, success: true } };
+      if (event.phase === 'done') {
+        window.setTimeout(() => {
+          setProgressMap(current => {
+            const next = { ...current };
+            delete next[event.id];
+            return next;
+          });
+        }, 1200);
+        return { ...prev, [event.id]: { ...existing, done: true, success: true } };
+      }
       if (event.phase === 'error') return { ...prev, [event.id]: { ...existing, done: true, success: false } };
       return { ...prev, [event.id]: { ...existing, lines: [...existing.lines, event.line] } };
     });

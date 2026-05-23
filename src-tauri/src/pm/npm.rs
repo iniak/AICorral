@@ -24,8 +24,14 @@ impl PackageManager for NpmManager {
     }
 
     fn latest_version(&self, package: &str) -> anyhow::Result<String> {
+        let settings = crate::settings::load();
         let mut cmd = Self::npm_cmd();
         cmd.args(["view", package, "version", "--json"]);
+        let registry = settings.npm_registry.trim();
+        if !registry.is_empty() {
+            cmd.args(["--registry", registry]);
+        }
+        settings.apply_proxy_env(&mut cmd);
         #[cfg(target_os = "windows")]
         {
             use std::os::windows::process::CommandExt;
@@ -42,12 +48,18 @@ impl PackageManager for NpmManager {
     }
 
     fn run_operation(&self, op: Operation, package: &str, on_line: &dyn Fn(String)) -> anyhow::Result<()> {
+        let settings = crate::settings::load();
         let mut cmd = Self::npm_cmd();
         match op {
             Operation::Install   => cmd.args(["install", "-g", package]),
             Operation::Upgrade   => cmd.args(["install", "-g", &format!("{}@latest", package)]),
             Operation::Uninstall => cmd.args(["uninstall", "-g", package]),
         };
+        let registry = settings.npm_registry.trim();
+        if !registry.is_empty() {
+            cmd.args(["--registry", registry]);
+        }
+        settings.apply_proxy_env(&mut cmd);
         run_streamed(cmd, on_line)
     }
 }

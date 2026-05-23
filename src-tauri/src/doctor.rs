@@ -68,9 +68,22 @@ fn check_disk() -> DoctorCheck {
 }
 
 fn check_outbound() -> DoctorCheck {
+    let settings = crate::settings::load();
+    let client = match settings.http_client() {
+        Ok(client) => client,
+        Err(e) => {
+            return DoctorCheck {
+                name: "Outbound HTTPS".into(),
+                status: "warn".into(),
+                detail: format!("invalid proxy setting: {}", e),
+            };
+        }
+    };
     let targets = ["registry.npmjs.org", "pypi.org", "github.com"];
     for target in &targets {
-        let ok = reqwest::blocking::get(format!("https://{}", target))
+        let ok = client
+            .get(format!("https://{}", target))
+            .send()
             .map(|r| r.status().is_success() || r.status().as_u16() < 500)
             .unwrap_or(false);
         if !ok {

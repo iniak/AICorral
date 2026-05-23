@@ -24,7 +24,7 @@ export default function ListRow({ cli, selected, checked, onCheck, onSelect, onA
         {cli.currentVersion && <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11 }}>{cli.currentVersion}</span>}
         {updateAvailable && <span className="pill warn" style={{ fontSize: 10, padding: '1px 6px', borderRadius: 4, background: 'var(--warn-soft)', color: 'var(--warn)' }}>Update</span>}
       </div>
-      <div style={{ display: 'flex', gap: 6, justifyContent: 'flex-end' }} onClick={e => e.stopPropagation()}>
+      <div className="actions" onClick={e => e.stopPropagation()}>
         {busy ? (
           <span style={{ fontSize: 12, color: 'var(--ink-3)' }}>…</span>
         ) : cli.installed ? (

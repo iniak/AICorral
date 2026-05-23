@@ -19,6 +19,28 @@ impl Default for Settings {
     }
 }
 
+impl Settings {
+    pub fn apply_proxy_env(&self, cmd: &mut std::process::Command) {
+        let proxy = self.http_proxy.trim();
+        if proxy.is_empty() {
+            return;
+        }
+        cmd.env("HTTP_PROXY", proxy);
+        cmd.env("HTTPS_PROXY", proxy);
+        cmd.env("http_proxy", proxy);
+        cmd.env("https_proxy", proxy);
+    }
+
+    pub fn http_client(&self) -> anyhow::Result<reqwest::blocking::Client> {
+        let proxy = self.http_proxy.trim();
+        let mut builder = reqwest::blocking::Client::builder();
+        if !proxy.is_empty() {
+            builder = builder.proxy(reqwest::Proxy::all(proxy)?);
+        }
+        Ok(builder.build()?)
+    }
+}
+
 fn settings_path() -> PathBuf {
     dirs::config_dir()
         .unwrap_or_else(|| PathBuf::from("."))
@@ -60,5 +82,11 @@ mod tests {
         let json = serde_json::to_string(&s).unwrap();
         let back: Settings = serde_json::from_str(&json).unwrap();
         assert_eq!(back.npm_registry, "https://custom.registry");
+    }
+
+    #[test]
+    fn empty_proxy_builds_http_client() {
+        let client = Settings::default().http_client();
+        assert!(client.is_ok());
     }
 }

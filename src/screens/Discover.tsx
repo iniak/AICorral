@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useCatalog } from '../hooks/useCatalog';
 import { useInstalled } from '../hooks/useInstalled';
 import { useInstallMutation } from '../hooks/useInstallMutation';
+import { usePlatform } from '../hooks/usePlatform';
 import CliIcon from '../components/CliIcon';
 import { api } from '../api/tauri';
 import type { CliView, ProgressEvent } from '../types';
@@ -20,6 +21,7 @@ export default function Discover({ setSelected, pushToast }: Props) {
 
   const { data: catalog } = useCatalog();
   const { data: installed } = useInstalled();
+  const { data: currentOs } = usePlatform();
 
   const instMap = useMemo(() => Object.fromEntries((installed ?? []).map(s => [s.id, s])), [installed]);
 
@@ -34,9 +36,9 @@ export default function Discover({ setSelected, pushToast }: Props) {
       latestVersion: null,
       binaryPath: state?.binaryPath ?? null,
       installedAt: state?.installedAt ?? null,
-      availableOnOs: entry.sources.some(s => s.os.includes('windows')),
+      availableOnOs: currentOs ? entry.sources.some(s => s.os.includes(currentOs)) : false,
     };
-  }), [catalog, instMap]);
+  }), [catalog, instMap, currentOs]);
 
   const shown = views
     .filter(c => filter === 'All' || c.tags.includes(filter))
@@ -77,7 +79,7 @@ export default function Discover({ setSelected, pushToast }: Props) {
                 <span key={t} style={{ fontSize: 10, padding: '1px 6px', borderRadius: 4, background: 'var(--surface-2)', color: 'var(--ink-3)', border: '1px solid var(--border)' }}>{t}</span>
               ))}
             </div>
-            <button className={`btn sm${cli.installed ? '' : ' primary'}`}
+            <button className={`btn sm discover-action${cli.installed ? '' : ' primary'}`}
               onClick={e => { e.stopPropagation(); onInstall(cli); }}
               disabled={!cli.availableOnOs || (mutation.isPending && mutation.variables?.id === cli.id)}>
               {!cli.availableOnOs ? 'Not available' : cli.installed ? 'Launch' : mutation.isPending && mutation.variables?.id === cli.id ? 'Installing…' : 'Install'}
