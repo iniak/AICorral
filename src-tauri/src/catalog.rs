@@ -37,7 +37,7 @@ mod tests {
     #[test]
     fn catalog_loads_with_correct_count() {
         let entries = load_catalog().unwrap();
-        assert_eq!(entries.len(), 8);
+        assert_eq!(entries.len(), 29);
     }
 
     #[test]

@@ -110,5 +110,285 @@
     "sources": [
       { "manager": "npm", "package": "antigravity", "os": ["windows", "macos", "linux"] }
     ]
+  },
+  {
+    "id": "opencode",
+    "name": "OpenCode",
+    "vendor": "Anomaly",
+    "mono": "OC",
+    "hue": 165,
+    "description": "Open-source terminal coding agent with multi-model support and project-aware workflows.",
+    "tags": ["agent", "terminal", "open-source"],
+    "launchCmd": "opencode",
+    "runtime": "Node.js CLI",
+    "sources": [
+      { "manager": "npm", "package": "opencode-ai", "os": ["windows", "macos", "linux"] },
+      { "manager": "brew", "package": "anomalyco/tap/opencode", "os": ["macos", "linux"] }
+    ]
+  },
+  {
+    "id": "copilot",
+    "name": "Copilot",
+    "vendor": "GitHub",
+    "mono": "CP",
+    "hue": 215,
+    "description": "GitHub-native terminal coding assistant for planning, editing, and repository workflows.",
+    "tags": ["agent", "terminal", "github"],
+    "launchCmd": "copilot",
+    "runtime": "Node ≥ 22",
+    "sources": [
+      { "manager": "npm", "package": "@github/copilot", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "codebuddy",
+    "name": "CodeBuddy",
+    "vendor": "Tencent",
+    "mono": "CB",
+    "hue": 210,
+    "description": "Tencent CodeBuddy command-line agent for code editing, sub-agents, hooks, and automation.",
+    "tags": ["agent", "terminal"],
+    "launchCmd": "codebuddy",
+    "runtime": "Node ≥ 18.20",
+    "sources": [
+      { "manager": "npm", "package": "@tencent-ai/codebuddy-code", "os": ["windows", "macos", "linux"] },
+      { "manager": "brew", "package": "Tencent-CodeBuddy/tap/codebuddy-code", "os": ["macos", "linux"] }
+    ]
+  },
+  {
+    "id": "qoder",
+    "name": "Qoder",
+    "vendor": "Alibaba Cloud",
+    "mono": "QD",
+    "hue": 35,
+    "description": "Agentic coding CLI with TUI and print modes, workspace tools, memory, and MCP support.",
+    "tags": ["agent", "terminal", "mcp"],
+    "launchCmd": "qodercli",
+    "runtime": "Node.js CLI",
+    "sources": [
+      { "manager": "npm", "package": "@qoder-ai/qodercli", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "deepseek-tui",
+    "name": "DeepSeek TUI",
+    "vendor": "Hmbown",
+    "mono": "DS",
+    "hue": 255,
+    "description": "Terminal coding agent for DeepSeek models with approval gates, reasoning streams, and local workspace tools.",
+    "tags": ["agent", "terminal", "tui"],
+    "launchCmd": "deepseek",
+    "runtime": "Rust binary",
+    "sources": [
+      { "manager": "npm", "package": "deepseek-tui", "os": ["windows", "macos", "linux"] },
+      { "manager": "brew", "package": "Hmbown/deepseek-tui/deepseek-tui", "os": ["macos", "linux"] }
+    ]
+  },
+  {
+    "id": "pi-coding-agent",
+    "name": "Pi Coding Agent",
+    "vendor": "Earendil Works",
+    "mono": "PI",
+    "hue": 120,
+    "description": "Open-source coding agent with a small tool core, provider logins, extensions, skills, and themes.",
+    "tags": ["agent", "terminal", "open-source"],
+    "launchCmd": "pi",
+    "runtime": "Node.js CLI",
+    "sources": [
+      { "manager": "npm", "package": "@earendil-works/pi-coding-agent", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "qwen-code",
+    "name": "Qwen Code",
+    "vendor": "Alibaba Cloud",
+    "mono": "QW",
+    "hue": 275,
+    "description": "Agentic coding CLI powered by Qwen models with codebase understanding and editing workflows.",
+    "tags": ["agent", "terminal", "open-source"],
+    "launchCmd": "qwen",
+    "runtime": "Node ≥ 20",
+    "sources": [
+      { "manager": "npm", "package": "@qwen-code/qwen-code", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "amp-cli",
+    "name": "Amp CLI",
+    "vendor": "Amp",
+    "mono": "AM",
+    "hue": 310,
+    "description": "Agentic coding tool for terminal-driven code changes, review loops, and collaborative development threads.",
+    "tags": ["agent", "terminal"],
+    "launchCmd": "amp",
+    "runtime": "Node.js CLI",
+    "sources": [
+      { "manager": "npm", "package": "@ampcode/cli", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "junie-cli",
+    "name": "Junie CLI",
+    "vendor": "JetBrains",
+    "mono": "JN",
+    "hue": 20,
+    "description": "JetBrains agentic coding workflow for project planning, implementation, and development automation.",
+    "tags": ["agent", "workflow"],
+    "launchCmd": "junie",
+    "runtime": "Standalone CLI",
+    "sources": []
+  },
+  {
+    "id": "amazon-q-developer-cli",
+    "name": "Amazon Q Developer CLI",
+    "vendor": "Amazon Web Services",
+    "mono": "Q",
+    "hue": 55,
+    "description": "Amazon Q command-line assistant for shell help, AWS workflows, and development tasks.",
+    "tags": ["assistant", "terminal", "aws"],
+    "launchCmd": "q",
+    "runtime": "Native CLI",
+    "sources": []
+  },
+  {
+    "id": "trae-agent",
+    "name": "Trae Agent",
+    "vendor": "ByteDance",
+    "mono": "TR",
+    "hue": 340,
+    "description": "Open-source software engineering agent for terminal-based task execution and research-friendly workflows.",
+    "tags": ["agent", "terminal", "open-source"],
+    "launchCmd": "trae-cli",
+    "runtime": "Python/uv CLI",
+    "sources": []
+  },
+  {
+    "id": "mistral-vibe",
+    "name": "Mistral Vibe",
+    "vendor": "Mistral AI",
+    "mono": "MV",
+    "hue": 45,
+    "description": "Terminal-native coding assistant from Mistral for scanning, planning, and editing local projects.",
+    "tags": ["agent", "terminal", "workflow"],
+    "launchCmd": "vibe",
+    "runtime": "Python ≥ 3.12",
+    "sources": [
+      { "manager": "pip", "package": "mistral-vibe", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "grok-cli",
+    "name": "Grok CLI",
+    "vendor": "Superagent AI",
+    "mono": "GK",
+    "hue": 5,
+    "description": "Community-built terminal coding agent for the Grok API with search, sub-agents, and remote control.",
+    "tags": ["agent", "terminal", "open-source"],
+    "launchCmd": "grok",
+    "runtime": "Bun CLI",
+    "sources": []
+  },
+  {
+    "id": "crush",
+    "name": "Crush",
+    "vendor": "Charmbracelet",
+    "mono": "CR",
+    "hue": 325,
+    "description": "Terminal AI coding assistant with multi-model sessions, LSP context, MCP support, and TUI workflows.",
+    "tags": ["agent", "terminal", "tui"],
+    "launchCmd": "crush",
+    "runtime": "Go binary",
+    "sources": [
+      { "manager": "npm", "package": "@charmland/crush", "os": ["windows", "macos", "linux"] },
+      { "manager": "brew", "package": "charmbracelet/tap/crush", "os": ["macos", "linux"] }
+    ]
+  },
+  {
+    "id": "plandex",
+    "name": "Plandex",
+    "vendor": "Plandex",
+    "mono": "PX",
+    "hue": 185,
+    "description": "Open-source terminal AI development tool for planning and executing large multi-file coding tasks.",
+    "tags": ["agent", "planning", "open-source"],
+    "launchCmd": "plandex",
+    "runtime": "Native CLI",
+    "sources": []
+  },
+  {
+    "id": "roo-code-cli",
+    "name": "Roo Code CLI",
+    "vendor": "Roo Code",
+    "mono": "RO",
+    "hue": 200,
+    "description": "Roo Code command-line workflow for agentic coding and automation tasks.",
+    "tags": ["agent", "workflow"],
+    "launchCmd": "roo",
+    "runtime": "CLI",
+    "sources": []
+  },
+  {
+    "id": "kilo-code-cli",
+    "name": "Kilo Code CLI",
+    "vendor": "Kilo Code",
+    "mono": "KC",
+    "hue": 265,
+    "description": "Open-source terminal coding agent for planning, debugging, and executing project changes.",
+    "tags": ["agent", "terminal", "open-source"],
+    "launchCmd": "kilo",
+    "runtime": "Node.js CLI",
+    "sources": [
+      { "manager": "npm", "package": "@kilocode/cli", "os": ["windows", "macos", "linux"] }
+    ]
+  },
+  {
+    "id": "swe-agent",
+    "name": "SWE-agent",
+    "vendor": "Princeton NLP",
+    "mono": "SW",
+    "hue": 95,
+    "description": "Open-source software engineering agent for issue-solving and benchmark-driven coding tasks.",
+    "tags": ["agent", "benchmark", "open-source"],
+    "launchCmd": "sweagent",
+    "runtime": "Python CLI",
+    "sources": []
+  },
+  {
+    "id": "gptme",
+    "name": "gptme",
+    "vendor": "gptme contributors",
+    "mono": "GM",
+    "hue": 145,
+    "description": "Personal AI assistant in the terminal with tools for shell, files, browser, and coding tasks.",
+    "tags": ["assistant", "terminal", "open-source"],
+    "launchCmd": "gptme",
+    "runtime": "Python ≥ 3.10",
+    "sources": [
+      { "manager": "pip", "package": "gptme", "os": ["macos", "linux"] }
+    ]
+  },
+  {
+    "id": "openhands-cli",
+    "name": "OpenHands CLI",
+    "vendor": "All Hands AI",
+    "mono": "OH",
+    "hue": 30,
+    "description": "Open-source coding agent platform with CLI workflows for running autonomous development tasks.",
+    "tags": ["agent", "terminal", "open-source"],
+    "launchCmd": "openhands",
+    "runtime": "Python ≥ 3.12 / uv",
+    "sources": []
+  },
+  {
+    "id": "kiro",
+    "name": "Kiro",
+    "vendor": "Amazon Web Services",
+    "mono": "KI",
+    "hue": 235,
+    "description": "Spec-driven AI coding agent that runs in the terminal and helps manage complex codebase tasks.",
+    "tags": ["agent", "terminal", "workflow"],
+    "launchCmd": "kiro",
+    "runtime": "Native CLI",
+    "sources": []
   }
 ]
