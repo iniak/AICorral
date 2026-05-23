@@ -9,14 +9,15 @@ interface Props {
   onSelect: (id: string) => void;
   onAction: (op: 'install' | 'upgrade' | 'uninstall' | 'launch', cli: CliView) => void;
   busy: boolean;
+  showCheck?: boolean;
 }
 
-export default function ListRow({ cli, selected, checked, onCheck, onSelect, onAction, busy }: Props) {
+export default function ListRow({ cli, selected, checked, onCheck, onSelect, onAction, busy, showCheck = true }: Props) {
   const updateAvailable = cli.installed && cli.currentVersion && cli.latestVersion && cli.currentVersion !== cli.latestVersion;
 
   return (
-    <div className={`list-row${selected ? ' selected' : ''}`} onClick={() => onSelect(cli.id)}>
-      <input type="checkbox" checked={checked} onClick={e => e.stopPropagation()} onChange={() => onCheck(cli.id)} />
+    <div className={`list-row${selected ? ' selected' : ''}${showCheck ? '' : ' no-check'}`} onClick={() => onSelect(cli.id)}>
+      {showCheck && <input type="checkbox" checked={checked} onClick={e => e.stopPropagation()} onChange={() => onCheck(cli.id)} />}
       <CliIcon id={cli.id} mono={cli.mono} hue={cli.hue} size="sm" />
       <div className="name">{cli.name}</div>
       <div className="desc" style={{ color: 'var(--ink-3)', fontSize: 12 }}>{cli.vendor}</div>

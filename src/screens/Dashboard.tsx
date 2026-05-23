@@ -38,7 +38,6 @@ function buildCliViews(
 
 export default function Dashboard({ setRoute, pushToast }: Props) {
   const [search, setSearch] = useState('');
-  const [checked, setChecked] = useState<Set<string>>(new Set());
 
   const { data: catalog } = useCatalog();
   const { data: installed } = useInstalled();
@@ -71,14 +70,6 @@ export default function Dashboard({ setRoute, pushToast }: Props) {
     mutation.mutate({ op, id: cli.id }, {
       onSuccess: () => pushToast(`${op === 'install' ? 'Installed' : op === 'upgrade' ? 'Upgraded' : 'Removed'} ${cli.name}`),
       onError: (err) => pushToast(`Error: ${err.message}`),
-    });
-  };
-
-  const toggleChecked = (id: string) => {
-    setChecked(prev => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
     });
   };
 
@@ -135,11 +126,12 @@ export default function Dashboard({ setRoute, pushToast }: Props) {
               key={cli.id}
               cli={cli}
               selected={false}
-              checked={checked.has(cli.id)}
-              onCheck={toggleChecked}
+              checked={false}
+              onCheck={() => {}}
               onSelect={() => {}}
               onAction={onAction}
               busy={mutation.isPending && mutation.variables?.id === cli.id}
+              showCheck={false}
             />
           ))}
         </div>

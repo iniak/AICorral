@@ -343,6 +343,9 @@ button { font-family: inherit; }
   position: relative;
   cursor: default;
 }
+.list-row.no-check {
+  grid-template-columns: 36px 1fr 130px 160px 140px;
+}
 .list-row:last-child { border-bottom: 0; }
 .list-row:hover { background: var(--surface-2); }
 .list-row.selected { background: var(--accent-soft); }
